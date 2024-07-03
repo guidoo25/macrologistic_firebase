@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "284610444937",
+    "project_id": "macrologisticguatemala",
+    "storage_bucket": "macrologisticguatemala.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284610444937:android:cc5671964fbac57afcd058",
+        "android_client_info": {
+          "package_name": "com.example.macrologistic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo_pEbw3771d6Kpg1KFKoKUjF9AtMvKDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
