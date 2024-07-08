@@ -66,6 +66,9 @@ final carerrasProvider = FutureProvider<List<CarrerasResponse>>((ref) async {
   return getCarreras(userId, empresa);
 });
 
+//final apiResponse = Provider<List<CarrerasResponse>> ((ref)=>getCarreras())
+
+
 final viajesProvider = FutureProvider<List<ReservasResponse>>((ref) async {
   final userId = await ref.watch(userIdProvider.future);
   return getViajes(userId);

@@ -5,33 +5,7 @@ class PruebaListviajest extends StatelessWidget {
   List<Viaje> viajesBonitos = [];
 
   final List<Viaje> viajeslista = [
-    Viaje(
-      origen: 'AV de las Americas',
-      cliente: 'Juan Perez',
-      destino: 'Alborada 4t Etapa',
-      descripcion: '5 minutos de viaje',
-      estado: 'Completado',
-      imagen: 'assets/map.PNG',
-      fecha: '2024-10-10  13:00',
-    ),
-    Viaje(
-      origen: ' villamil playas',
-      cliente: 'Maria Yanez',
-      destino: 'Shopping libertad',
-      descripcion: '1:30 de viaje',
-      estado: 'Cancelado',
-      imagen: '',
-      fecha: '2024-10-10  15:00',
-    ),
-    Viaje(
-      cliente: 'Carlos Rodriguez',
-      origen: 'Cementerio general',
-      destino: 'Arcos Plaza',
-      descripcion: '1 hora de viaje',
-      estado: 'Completado',
-      imagen: 'assets/map2.PNG',
-      fecha: '2024-10-10  17:00',
-    ),
+    
   ];
 
   @override

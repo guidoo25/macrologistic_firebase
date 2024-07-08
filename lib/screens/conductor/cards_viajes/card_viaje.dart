@@ -36,7 +36,7 @@ class ReservasCard extends ConsumerWidget {
             point: LatLng(myLocation.latitude, myLocation.longitude),
             width: 80,
             height: 80,
-            child: const Icon(Icons.my_location, color: Colors.blue, size: 45),
+            child: const Icon(Icons.car_repair, color: Colors.blue, size: 45),
           ),
           Marker(
             point: LatLng(double.parse(reserva!.puntoLlegadaCarreraLatitud),
@@ -61,7 +61,7 @@ class ReservasCard extends ConsumerWidget {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeReservas()),
+          MaterialPageRoute(builder: (context) => HomeReservas(viaje: reserva)),
         );
       },
       child: SizedBox(

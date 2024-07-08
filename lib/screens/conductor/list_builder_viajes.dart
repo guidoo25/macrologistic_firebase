@@ -3,11 +3,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:macrologisticguatemala/models/reservas_response.dart';
 import 'package:macrologisticguatemala/models/response_carreras.dart';
 import 'package:macrologisticguatemala/providers/mylocation.dart';
 import 'package:macrologisticguatemala/screens/conductor/cards_viajes/card_viaje.dart';
-import 'package:macrologisticguatemala/screens/reservas/home_reservas.dart';
 
 class Listviajest extends ConsumerWidget {
   final List<CarrerasResponse> reservas;

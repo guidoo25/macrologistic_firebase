@@ -5,12 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:macrologisticguatemala/config/enviroments.dart';
+import 'package:macrologisticguatemala/models/driver_events.dart';
+import 'package:macrologisticguatemala/models/response_carreras.dart';
 import 'package:macrologisticguatemala/providers/auth_providers.dart';
+import 'package:macrologisticguatemala/providers/driver_events/api_drivers_events.dart';
 import 'package:macrologisticguatemala/shared/button_estade.dart';
 import 'package:macrologisticguatemala/providers/mylocation.dart';
 import 'package:macrologisticguatemala/widgets/loadingButton.dart';
 
 class CardConductor extends ConsumerStatefulWidget {
+  final CarrerasResponse? viaje;
+  const CardConductor({Key? key, this.viaje}) : super(key: key);
   @override
   _CardConductorState createState() => _CardConductorState();
 }
@@ -22,7 +27,7 @@ class _CardConductorState extends ConsumerState<CardConductor> {
   @override
   Widget build(BuildContext context) {
     final columnIndex = ref.watch(columnProvider);
-    LatLng finalPosition = LatLng(-2.1482, -79.9667);
+   // LatLng finalPosition = LatLng(-2.1482, -79.9667);
     final myLocation = ref.read(myLocationProvider);
 
     return Align(
@@ -52,100 +57,10 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(width: 10),
-                    // MyButtonestade(
-                    //   onTap: () async {
-                    //     await updateMyLocation(ref);
-                    //     LatLng finalPosition = LatLng(-2.1482, -79.9667);
-                    //     ref.read(destinationProvider.notifier).state =
-                    //         finalPosition;
-                    //     updateMarkers(ref);
-                    //     // Llamar a getCoordinates si la ubicación actual ya está disponible
-                    //     final myLocation = ref.read(myLocationProvider);
-                    //     if (myLocation != null) {
-                    //       ref
-                    //           .read(pointsProvider.notifier)
-                    //           .state
-                    //           .clear(); // Limpiar puntos previos
-                    //       getCoordinates(ref, myLocation, finalPosition);
-                    //     }
-                    //   },
-                    //   nametext: 'Partida',
-                    //   color: Colors.yellow,
-                    //   icon: Icons.play_arrow,
-                    // ),
-                    // SizedBox(width: 10),
-                    // MyButtonestade(
-                    //   onTap: () async {
-                    //     final turist = LatLng(-2.1895, -79.8780);
-                    //     ref.read(destinationProvider.notifier).state = turist;
-                    //     updateMarkers(ref);
-                    //     final myLocation = ref.read(myLocationProvider);
-                    //     if (myLocation != null) {
-                    //       ref
-                    //           .read(pointsProvider.notifier)
-                    //           .state
-                    //           .clear(); // Limpiar puntos previos
-                    //       getCoordinates(ref, myLocation, turist);
-                    //     }
-                    //   },
-                    //   nametext: 'Inicio',
-                    //   color: Colors.blue,
-                    //   icon: Icons.location_on,
-                    // ),
-                    // SizedBox(width: 10),
-                    // MyButtonestade(
-                    //   onTap: () {},
-                    //   nametext: 'Final',
-                    //   color: Colors.green,
-                    //   icon: Icons.flag,
-                    // ),
-                    // SizedBox(width: 10),
-                    // MyButtonestade(
-                    //   onTap: () {
-                    //     showDialog(
-                    //       context: context,
-                    //       builder: (context) => AlertDialog(
-                    //         title: Text('No show'),
-                    //         content: Column(
-                    //           children: [
-                    //             ElevatedButton(
-                    //               onPressed: getImage,
-                    //               child: Text('Subir foto de evento'),
-                    //             ),
-                    //             // Muestra la imagen seleccionada
-                    //             _selectedImage != null
-                    //                 ? Image.file(_selectedImage!)
-                    //                 : Container(
-                    //                     width: 200,
-                    //                     height: 200,
-                    //                     decoration: BoxDecoration(
-                    //                       color: Colors.grey[200],
-                    //                       border: Border.all(
-                    //                           color: Colors.grey[400]!),
-                    //                     ),
-                    //                     child: Icon(Icons.image,
-                    //                         color: Colors.grey[400]),
-                    //                   ),
-                    //           ],
-                    //         ),
-                    //         actions: [
-                    //           TextButton(
-                    //               onPressed: () {
-                    //                 Navigator.of(context).pop();
-                    //               },
-                    //               child: Text('Enviar'))
-                    //         ],
-                    //       ),
-                    //     );
-                    //   },
-                    //   nametext: 'Novedad',
-                    //   color: Colors.red,
-                    //   icon: Icons.warning_rounded,
-                    // ),
+                    
 
                     if (columnIndex == 0) ...[
                       Center(
-                        // Asegura que el botón esté centrado horizontalmente
                         child: LoadingButton(
                           loadingStateText: "loading...",
                           bgColor: Enviroments.primaryColor,
@@ -155,19 +70,17 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                             ref.read(columnProvider.notifier).state =
                                 (columnIndex + 1) % 4,
                             //TODO:ANADIR METODO PARA PICKUP 1
+                            // await ApiDriverEvents().EventPickup(
+                            //   DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId)  
+                            // ),
+                               
                             await updateMyLocation(ref),
-                            ref.read(destinationProvider.notifier).state =
-                                finalPosition,
+                            widget.viaje != null
+                                ? ref.read(destinationProvider.notifier).state =
+                                    LatLng(double.parse(widget.viaje!.puntoInicioCarreraLatitud),
+                                        double.parse(widget.viaje!.puntoInicioCarreraLongitud))
+                                : null,
                             updateMarkers(ref),
-                            // Llamar a getCoordinates si la ubicación actual ya está disponible
-                            if (myLocation != null)
-                              {
-                                ref
-                                    .read(pointsProvider.notifier)
-                                    .state
-                                    .clear(), // Limpiar puntos previos
-                                getCoordinates(ref, myLocation, finalPosition),
-                              }
                           },
                         ),
                       ),
@@ -183,7 +96,11 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                                     const Duration(seconds: 2)),
                                 ref.read(columnProvider.notifier).state =
                                     (columnIndex + 1) % 4,
+                                  
                                 //TODO: Aquí se debe enviar la ubicación del cliente a la api local de la empresa
+                                // await ApiDriverEvents().EventArrivo(
+                                //   DriverEventsModel(customerReference: widget.viaje!.codReferencia, bookingReference: widget.viaje!.hashReserva, latitude: double.parse(widget.viaje!.puntoInicioCarreraLatitud), longitude: double.parse( widget.viaje!.puntoInicioCarreraLongitud), driverId: widget.viaje!.reservaDriverId , idReserva: widget.viaje!.idReserva)  
+                                // ),
                               },
                               bgColor: Enviroments.primaryColor,
                               text: 'En el punto de recogida',
@@ -200,7 +117,20 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                               await Future.delayed(const Duration(seconds: 2)),
                               ref.read(columnProvider.notifier).state =
                                   (columnIndex + 1) % 4,
+                                
                               //TODO: Aquí se debe enviar la ubicación del cliente a la api  local de la empresa
+                              await updateMyLocation(ref),
+                              // await ApiDriverEvents().EventPickup(
+                              //   DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId)  
+                              // ),
+                              widget.viaje != null
+                                ? ref.read(destinationProvider.notifier).state =
+                                    LatLng(double.parse(widget.viaje!.puntoLlegadaCarreraLatitud),
+                                        double.parse(widget.viaje!.puntoLlegadaCarreraLongitud))
+                                : null,
+                              updateMarkers(ref),
+
+                             
                             },
                             bgColor: Enviroments.primaryColor,
                             text: 'Buscando pasajero',
@@ -209,17 +139,20 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                           TextButton(
                               onPressed: () {
                                 showDialog(
+
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                          title: Text('No show'),
+                                          title: Text('No se presento'),
                                           content: Column(
                                             children: [
-                                              ElevatedButton(
+                                              TextButton(onPressed: (){}, child: Text('${widget.viaje!.informacionClienteTelefono}')),
+                                              LoadingButton(
                                                 onPressed: getImage,
-                                                child: Text(
-                                                    'Subir foto de evento'),
+                                                text: 'Subir foto de evento',
+                                                bgColor: Enviroments.primaryColor,
+                                               
                                               ),
-                                              // Muestra la imagen seleccionada
+                                              SizedBox(height: 10),
                                               _selectedImage != null
                                                   ? Image.file(_selectedImage!)
                                                   : Container(
@@ -248,7 +181,7 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                                         ));
                               },
                               child: Text(
-                                'No show',
+                                'No se presento',
                                 style: TextStyle(
                                   color: Colors
                                       .red, // Establece el color del texto a rojo
@@ -261,15 +194,7 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                         onPressed: () => ref
                             .read(columnProvider.notifier)
                             .state = (columnIndex + 1) % 4,
-                        style: ElevatedButton.styleFrom(
-                          // Color del texto
-                          elevation: 5, // Elevación para sombra
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  12)), // Bordes redondeados
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10), // Padding
-                        ),
+       
                         child: Text('Llevando pasajero a destino'),
                       ),
                     ] else ...[
@@ -281,12 +206,12 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                           Navigator.pop(context),
                         },
                         style: ElevatedButton.styleFrom(
-                          elevation: 5, // Elevación para sombra
+                          elevation: 5,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                  12)), // Bordes redondeados
+                                  12)), 
                           padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10), // Padding
+                              horizontal: 20, vertical: 10), 
                         ),
                         child: Text('Finalizar viaje'),
                       ),
@@ -296,10 +221,11 @@ class _CardConductorState extends ConsumerState<CardConductor> {
               ),
               const SizedBox(height: 10),
               Text(
-                'Nombre del Cliente',
+                'Nombre Pasajero:${widget.viaje!.informacionClienteNombres}',
                 style: TextStyle(fontSize: 16, color: Colors.black),
               ),
-              Text('Status:Asignado'),
+              Text('${widget.viaje!.codReferencia}',
+                  style: TextStyle(fontSize: 16, color: Colors.black)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -307,7 +233,7 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                   const SizedBox(width: 5),
                   Flexible(
                     child: Text(
-                      'Ubicación del Cliente: Aeropuerto Jose Joaquin de Olmedo',
+                      'Ubicación del Cliente: ${widget.viaje!.direccion_recogida}',
                       style: TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ),
@@ -320,7 +246,7 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                   const SizedBox(width: 5),
                   Flexible(
                     child: Text(
-                      'Lugar de destino: Hotel Oro Verde',
+                      'Lugar de destino: ${widget.viaje!.direccion_llegada}',
                       style: TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ),
@@ -330,6 +256,7 @@ class _CardConductorState extends ConsumerState<CardConductor> {
           ),
         ));
   }
+
 
   Future getImage() async {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -342,3 +269,5 @@ class _CardConductorState extends ConsumerState<CardConductor> {
     });
   }
 }
+
+

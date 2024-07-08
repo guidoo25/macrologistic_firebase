@@ -16,9 +16,9 @@ final appRouter = GoRouter(initialLocation: '/Login', routes: [
       path: '/Home',
       name: 'Home',
       builder: (context, state) => navbarInicial()),
-  GoRoute(
-    path: '/viajes',
-    name: 'viajes',
-    builder: (context, state) => ListViajes(),
-  ),
+   GoRoute(
+     path: '/viajes',
+     name: 'viajes',
+     builder: (context, state) => ListViajes(),
+   ),
 ]);

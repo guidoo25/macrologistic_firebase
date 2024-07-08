@@ -31,7 +31,7 @@ class NotificacionesNotifier extends StateNotifier<List<String>> {
 
       if (message.notification != null) {
         print('contnenido noficiacion: ${message.notification}');
-        state = [...state, message.notification!.title ?? 'Sin título'];
+          state = [...state, message.notification!.title ?? 'Sin título'];
       }
     });
 
