@@ -9,6 +9,7 @@ import 'package:macrologisticguatemala/models/driver_events.dart';
 import 'package:macrologisticguatemala/models/response_carreras.dart';
 import 'package:macrologisticguatemala/providers/auth_providers.dart';
 import 'package:macrologisticguatemala/providers/driver_events/api_drivers_events.dart';
+import 'package:macrologisticguatemala/providers/driver_events/driver_event_notifier.dart';
 import 'package:macrologisticguatemala/shared/button_estade.dart';
 import 'package:macrologisticguatemala/providers/mylocation.dart';
 import 'package:macrologisticguatemala/widgets/loadingButton.dart';
@@ -27,8 +28,9 @@ class _CardConductorState extends ConsumerState<CardConductor> {
   @override
   Widget build(BuildContext context) {
     final columnIndex = ref.watch(columnProvider);
-   // LatLng finalPosition = LatLng(-2.1482, -79.9667);
     final myLocation = ref.read(myLocationProvider);
+    final eventPickupStatus = ref.watch(eventPickupProvider);
+
 
     return Align(
         alignment: Alignment.bottomCenter,
@@ -62,45 +64,53 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                     if (columnIndex == 0) ...[
                       Center(
                         child: LoadingButton(
-                          loadingStateText: "loading...",
+                          loadingStateText: "Cargando...",
                           bgColor: Enviroments.primaryColor,
                           text: 'En camino a recoger al cliente',
-                          onPressed: () async => {
-                            await Future.delayed(const Duration(seconds: 2)),
-                            ref.read(columnProvider.notifier).state =
-                                (columnIndex + 1) % 4,
-                            //TODO:ANADIR METODO PARA PICKUP 1
-                            // await ApiDriverEvents().EventPickup(
-                            //   DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId)  
-                            // ),
-                               
-                            await updateMyLocation(ref),
+                          onPressed: () async {
+                            final PickupOk = await ref.read(eventPickupProvider.notifier).eventPickup1(DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId));
+                            await updateMyLocation(ref);
                             widget.viaje != null
                                 ? ref.read(destinationProvider.notifier).state =
                                     LatLng(double.parse(widget.viaje!.puntoInicioCarreraLatitud),
                                         double.parse(widget.viaje!.puntoInicioCarreraLongitud))
-                                : null,
-                            updateMarkers(ref),
+                                : null;
+                            updateMarkers(ref);
+                            if (PickupOk == true) {
+        
+                              showSnackbar(context, 'Ubicación enviada correctamente'	);
+                              ref.read(columnProvider.notifier).state =
+                                    (columnIndex + 1) % 4;
+                            } else if (PickupOk == false) {
+                              showSnackbar(context, 'Error al enviar la ubicación');
+                            }
                           },
                         ),
                       ),
-                    ] else if (columnIndex == 1) ...[
+                    ] else if (columnIndex == 1 ) ...[
                       Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             LoadingButton(
                               loadingStateText: "Cargando...",
-                              onPressed: () async => {
-                                await Future.delayed(
-                                    const Duration(seconds: 2)),
-                                ref.read(columnProvider.notifier).state =
-                                    (columnIndex + 1) % 4,
-                                  
-                                //TODO: Aquí se debe enviar la ubicación del cliente a la api local de la empresa
-                                // await ApiDriverEvents().EventArrivo(
-                                //   DriverEventsModel(customerReference: widget.viaje!.codReferencia, bookingReference: widget.viaje!.hashReserva, latitude: double.parse(widget.viaje!.puntoInicioCarreraLatitud), longitude: double.parse( widget.viaje!.puntoInicioCarreraLongitud), driverId: widget.viaje!.reservaDriverId , idReserva: widget.viaje!.idReserva)  
-                                // ),
+                              onPressed: () async  {
+                            final PickupOk = await ref.read(eventPickupProvider.notifier).eventPickup2(DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId));
+                            await updateMyLocation(ref);
+                            widget.viaje != null
+                                ? ref.read(destinationProvider.notifier).state =
+                                    LatLng(double.parse(widget.viaje!.puntoInicioCarreraLatitud),
+                                        double.parse(widget.viaje!.puntoInicioCarreraLongitud))
+                                : null;
+                            updateMarkers(ref);
+                            if (PickupOk == true) {
+        
+                              showSnackbar(context, 'Ubicación enviada correctamente'	);
+                              ref.read(columnProvider.notifier).state =
+                                    (columnIndex + 1) % 4;
+                            } else if (PickupOk == false) {
+                              showSnackbar(context, 'Error al enviar la ubicación');
+                            }
                               },
                               bgColor: Enviroments.primaryColor,
                               text: 'En el punto de recogida',
@@ -113,22 +123,23 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           LoadingButton(
-                            onPressed: () async => {
-                              await Future.delayed(const Duration(seconds: 2)),
-                              ref.read(columnProvider.notifier).state =
-                                  (columnIndex + 1) % 4,
-                                
-                              //TODO: Aquí se debe enviar la ubicación del cliente a la api  local de la empresa
-                              await updateMyLocation(ref),
-                              // await ApiDriverEvents().EventPickup(
-                              //   DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId)  
-                              // ),
-                              widget.viaje != null
+                            onPressed: () async {
+                            final PickupOk = await ref.read(eventPickupProvider.notifier).eventDropoff(DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId));
+                            await updateMyLocation(ref);
+                            widget.viaje != null
                                 ? ref.read(destinationProvider.notifier).state =
-                                    LatLng(double.parse(widget.viaje!.puntoLlegadaCarreraLatitud),
-                                        double.parse(widget.viaje!.puntoLlegadaCarreraLongitud))
-                                : null,
-                              updateMarkers(ref),
+                                    LatLng(double.parse(widget.viaje!.puntoInicioCarreraLatitud),
+                                        double.parse(widget.viaje!.puntoInicioCarreraLongitud))
+                                : null;
+                            updateMarkers(ref);
+                            if (PickupOk == true) {
+        
+                              showSnackbar(context, 'Ubicación enviada correctamente'	);
+                              ref.read(columnProvider.notifier).state =
+                                    (columnIndex + 1) % 4;
+                            } else if (PickupOk == false) {
+                              showSnackbar(context, 'Error al enviar la ubicación');
+                            }
 
                              
                             },
@@ -199,11 +210,25 @@ class _CardConductorState extends ConsumerState<CardConductor> {
                       ),
                     ] else ...[
                       ElevatedButton(
-                        onPressed: () => {
-                          //TODO: ANADIR METODO DE DROPOFF FINAL
-                          ref.read(columnProvider.notifier).state =
-                              (columnIndex + 1) % 4,
-                          Navigator.pop(context),
+                        onPressed: () async{
+                            final PickupOk = await ref.read(eventPickupProvider.notifier).eventDropoff2(DriverEventsModel(customerReference: widget.viaje!.referenciaCliente, bookingReference: widget.viaje!.refrenciaReserva, latitude: myLocation!.latitude, longitude: myLocation.longitude, idReserva: widget.viaje!.idReserva, driverId: widget.viaje!.reservaDriverId));
+                            await updateMyLocation(ref);
+                            widget.viaje != null
+                                ? ref.read(destinationProvider.notifier).state =
+                                    LatLng(double.parse(widget.viaje!.puntoInicioCarreraLatitud),
+                                        double.parse(widget.viaje!.puntoInicioCarreraLongitud))
+                                : null;
+                            updateMarkers(ref);
+                            if (PickupOk == true) {
+        
+                              showSnackbar(context, 'Ubicación enviada correctamente'	);
+                              ref.read(columnProvider.notifier).state =
+                                    (columnIndex + 1) % 4;
+                                      Navigator.pop(context);
+                            } else if (PickupOk == false) {
+                              showSnackbar(context, 'Error al enviar la ubicación');
+                            }
+                        
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 5,
@@ -256,7 +281,11 @@ class _CardConductorState extends ConsumerState<CardConductor> {
           ),
         ));
   }
-
+void showSnackbar(BuildContext context, String message) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    }
 
   Future getImage() async {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);

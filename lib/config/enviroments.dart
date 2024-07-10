@@ -16,6 +16,7 @@ class Enviroments {
   static String apiUser = dotenv.env['email'] ?? '';
   static String apiPassword = dotenv.env['password'] ?? '';
   static String apiLaravel = dotenv.env['API_LARAVEL'] ?? '';
+  static String apiNode = dotenv.env['API_NODE'] ?? '';
 
   static Future<String?> getTokentApiLaravel() async {
     final prefs = await SharedPreferences.getInstance();

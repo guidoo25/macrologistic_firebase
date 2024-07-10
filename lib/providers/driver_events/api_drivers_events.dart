@@ -31,51 +31,32 @@ Future<void> UltimoDriverEvent(int id_reserva) async{
     
   }
 
-  Future<void> EventStart(DriverEventsModel eventos) async {
-    final url = Uri.parse('${baseUrl}/events/start');
 
-    final eventosJson = jsonEncode(eventos);
-    print(eventosJson);
-    final token = await obtenerTokenGuardado();
-
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${token}'
-      },
-      body: eventosJson,
-    );
-
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else {
-      print('Error: ${response.statusCode}');
-    }
-
-}
 
   Future<void> EventPickup(DriverEventsModel detalles) async {
-    final url = Uri.parse('${baseUrl}/events/departedToPickup');
-
-    final detallesJson = jsonEncode(detalles);
-    print(detallesJson);
-    final token = await obtenerTokenGuardado();
-
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ${token}'
-      
-      },
-      body: detallesJson,
-    );
-
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else {
-      print('Error: ${response.statusCode}');
+    try {
+      final url = Uri.parse('${baseUrl}/events/departedToPickup');
+  
+      final detallesJson = jsonEncode(detalles);
+      print(detallesJson);
+      final token = await obtenerTokenGuardado();
+  
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer $token'
+        },
+        body: detallesJson,
+      );
+  
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception caught: $e');
     }
   }
 
