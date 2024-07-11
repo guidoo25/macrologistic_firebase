@@ -14,7 +14,7 @@ void main() async {
 
   await NotificacionesNotifier.initializeFCM().then((_) {
     print("Firebase inicializado correctamente");
-    // Llama al método permisos después de inicializar Firebase
+
     NotificacionesNotifier.permisos().then((_) {
       print("Permisos solicitados correctamente");
     }).catchError((error) {

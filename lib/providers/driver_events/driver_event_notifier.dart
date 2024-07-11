@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+  
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:macrologisticguatemala/config/enviroments.dart';
 import 'package:macrologisticguatemala/models/driver_events.dart';
@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 class EventPickupStatus {
   final bool success;
   
-
   EventPickupStatus({required this.success});
 }
 
@@ -158,6 +157,7 @@ class EventPickupNotifier extends StateNotifier<EventPickupStatus> {
       final detallesMap = {
         "customerReference": detalles.customerReference,
         "bookingReference": detalles.bookingReference,
+        "id_reserva":detalles.idReserva
         
 
         // "event_type": "DRIVER_LIVE_LOCATION",
@@ -202,6 +202,7 @@ class EventPickupNotifier extends StateNotifier<EventPickupStatus> {
       final detallesMap = {
         "customerReference": detalles.customerReference,
         "bookingReference": detalles.bookingReference,
+        "id_reserva":detalles.idReserva
         // "event_type": "DRIVER_LIVE_LOCATION",
         // "latitude": detalles.latitude,
         // "longitude": detalles.longitude,
